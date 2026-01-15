@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Irreversible Focus</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      width: 350px;
+      min-height: 200px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #1a1a1a;
+      color: #ffffff;
+      padding: 20px;
+    }
+    
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+    
+    .locked-message {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      color: #4CAF50;
+      padding: 40px 20px;
+      display: none;
+    }
+    
+    .locked-message.active {
+      display: block;
+    }
+    
+    .input-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #cccccc;
+    }
+    
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 10px;
+      border: 2px solid #333333;
+      border-radius: 6px;
+      background: #2a2a2a;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 13px;
+      resize: vertical;
+    }
+    
+    textarea:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+    
+    textarea::placeholder {
+      color: #666666;
+    }
+    
+    .button-container {
+      display: flex;
+      gap: 10px;
+    }
+    
+    button {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .lock-button {
+      background: #d32f2f;
+      color: #ffffff;
+    }
+    
+    .lock-button:hover {
+      background: #b71c1c;
+      transform: translateY(-1px);
+    }
+    
+    .lock-button:active {
+      transform: translateY(0);
+    }
+    
+    .delete-button {
+      background: #424242;
+      color: #ffffff;
+    }
+    
+    .delete-button:hover {
+      background: #616161;
+    }
+    
+    .info-text {
+      font-size: 12px;
+      color: #888888;
+      text-align: center;
+      margin-top: 5px;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Irreversible Focus</h1>
+    
+    <div class="locked-message" id="lockedMessage">
+      Focus Mode Active
+    </div>
+    
+    <div class="input-section" id="inputSection">
+      <label for="domainsInput">Enter domain names (one per line):</label>
+      <textarea 
+        id="domainsInput" 
+        placeholder="instagram.com&#10;twitter.com&#10;facebook.com&#10;reddit.com"
+      ></textarea>
+      
+      <div class="button-container">
+        <button class="lock-button" id="lockButton">LOCK FOCUS FOREVER</button>
+        <button class="delete-button" id="deleteButton">Clear</button>
+      </div>
+      
+      <div class="info-text">
+        ⚠️ Once locked, this cannot be undone
+      </div>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
+

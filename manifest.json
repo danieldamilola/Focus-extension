@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "Irreversible Focus",
+  "version": "1.0.0",
+  "description": "Lock focus forever - block distracting websites with no way to undo",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "irreversible-focus-app@yourname.local",
+      "strict_min_version": "115.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
+  "permissions": [
+    "declarativeNetRequest",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["focus.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
+
