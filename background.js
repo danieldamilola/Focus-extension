@@ -94,3 +94,10 @@ async function updateBlockingRules(domains) {
 chrome.runtime.onStartup.addListener(async () => {
   await initializeRules();
 });
+
+// React to storage changes (lock set while SW was inactive)
+chrome.storage.onChanged.addListener((changes) => {
+  if (changes.isLocked && changes.isLocked.newValue === true && changes.domains) {
+    updateBlockingRules(changes.domains.newValue);
+  }
+});

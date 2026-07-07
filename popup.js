@@ -93,6 +93,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     chrome.runtime.sendMessage({
       action: 'updateRules',
       domains: domains
+    }).catch(() => {
+      // Service worker may not be active yet — rules will load from storage on wake
     });
     
     // Hide all input elements immediately
