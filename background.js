@@ -1,5 +1,7 @@
 // Background service worker for Irreversible Focus extension
 
+let updatingRules = false;
+
 // Initialize rules when extension is installed or updated
 chrome.runtime.onInstalled.addListener(async () => {
   await initializeRules();
@@ -30,20 +32,19 @@ async function initializeRules() {
 
 // Update blocking rules using declarativeNetRequest
 async function updateBlockingRules(domains) {
-  // Remove existing rules first
-  const existingRules = await chrome.declarativeNetRequest.getDynamicRules();
-  const ruleIds = existingRules.map((rule) => rule.id);
+  if (updatingRules) return;
+  updatingRules = true;
+  try {
+    const existingRules = await chrome.declarativeNetRequest.getDynamicRules();
+    const ruleIds = existingRules.map((rule) => rule.id);
 
-  if (ruleIds.length > 0) {
-    await chrome.declarativeNetRequest.updateDynamicRules({
-      removeRuleIds: ruleIds,
-    });
-  }
+    if (ruleIds.length > 0) {
+      await chrome.declarativeNetRequest.updateDynamicRules({
+        removeRuleIds: ruleIds,
+      });
+    }
 
-  // Create new rules for each domain
-  const rules = domains.map((domain, index) => {
-    // Create rules for both http and https
-    return {
+    const rules = domains.map((domain, index) => ({
       id: index + 1,
       priority: 1,
       action: {
@@ -56,12 +57,9 @@ async function updateBlockingRules(domains) {
         urlFilter: `*://${domain}/*`,
         resourceTypes: ["main_frame", "sub_frame"],
       },
-    };
-  });
+    }));
 
-  // Add rules for www variants
-  const wwwRules = domains.map((domain, index) => {
-    return {
+    const wwwRules = domains.map((domain, index) => ({
       id: domains.length + index + 1,
       priority: 1,
       action: {
@@ -74,20 +72,20 @@ async function updateBlockingRules(domains) {
         urlFilter: `*://www.${domain}/*`,
         resourceTypes: ["main_frame", "sub_frame"],
       },
-    };
-  });
+    }));
 
-  // Combine all rules
-  const allRules = [...rules, ...wwwRules];
+    const allRules = [...rules, ...wwwRules];
 
-  // Update dynamic rules
-  if (allRules.length > 0) {
-    await chrome.declarativeNetRequest.updateDynamicRules({
-      addRules: allRules,
-    });
+    if (allRules.length > 0) {
+      await chrome.declarativeNetRequest.updateDynamicRules({
+        addRules: allRules,
+      });
+    }
+
+    console.log(`Focus locked: ${domains.length} domain(s) blocked`);
+  } finally {
+    updatingRules = false;
   }
-
-  console.log(`Focus locked: ${domains.length} domain(s) blocked`);
 }
 
 // Also initialize on startup
